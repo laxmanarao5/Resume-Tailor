@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Resume Tailor & Compiler",
+  "version": "1.0",
+  "description": "Tailor your LaTeX resume for any Job Description using Gemini and download the compiled PDF.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "downloads"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.linkedin.com/*", "*://*.indeed.com/*", "*://*/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

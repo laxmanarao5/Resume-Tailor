@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Environment Variables
+.env
+backend/.env
+
+# Temporary or Generated Files
+*.pdf
+Resume_tailored.tex
+.DS_Store

@@ -1,0 +1,18 @@
+{
+  "name": "resume-tailor-backend",
+  "version": "1.0.0",
+  "description": "Backend for tailoring LaTeX resumes and compiling them to PDF using Gemini API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.11.0",
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.19.2",
+    "form-data": "^4.0.0",
+    "node-latex-compiler": "^1.0.5"
+  }
+}

@@ -1,0 +1,85 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries\uppercase}{}{0em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+\setlist[itemize]{noitemsep, topsep=1pt, partopsep=0pt, parsep=0pt, itemsep=1.2pt, leftmargin=12pt}
+\hypersetup{colorlinks=true, urlcolor=blue}
+
+\begin{document}
+
+% --- HEADER ---
+\begin{center}
+    {\Huge \bfseries BODDEPALLI LAXMANA RAO} \\
+    \vspace{2pt}
+    Hyderabad, India | DOB: 28-05-2002 | +91 8367027220 | \href{mailto:laxmana.dev@gmail.com}{laxmana.dev@gmail.com} \\
+    \href{http://linkedin.com/in/boddepalli-laxmanarao/}{linkedin.com/in/boddepalli-laxmanarao} | \href{https://github.com/laxmanarao5}{github.com/laxmanarao5} | \href{https://laxman-dev.vercel.app}{laxman-dev.vercel.app}
+\end{center}
+\vspace{4pt}
+% --- CAREER OBJECTIVE ---
+\section{Career Objective}
+Result-oriented Fullstack Developer seeking a Senior role to leverage 3.5 years of expertise in Next.js/React frontends, Node.js GraphQL gateways, and Python microservices. Committed to architecting scalable cloud solutions, streamlining DevOps workflows, and driving engineering excellence in high-impact software environments.
+
+% --- SKILLS ---
+\section{Key Skills}
+\begin{itemize}
+    \item \textbf{Backend:} Node.js (Express, Apollo Server), Python (Django, Flask), RESTful APIs, GraphQL Gateway, Microservices Architecture
+    \item \textbf{Frontend:} React.js, Next.js, TypeScript, JavaScript (ES6+), Redux Toolkit, HTML5/CSS3, Responsive UI
+    \item \textbf{Cloud \& DevOps:} Azure, AWS (EC2, S3, Lambda, CloudFront), Docker, Kubernetes, CI/CD (Azure DevOps, GitHub Actions, AWS CodeBuild)
+    \item \textbf{Databases:} PostgreSQL, MySQL, SQL Server, DynamoDB, MongoDB, Redis
+    \item \textbf{AI & Tooling:} OpenAI API, Claude/Anthropic APIs, AWS Bedrock, Git
+    \item \textbf{Observability \& Testing:} Jest, PyTest, Postman, CI/CD Automation
+\end{itemize}
+
+% --- ACHIEVEMENTS ---
+\section{Key Achievements}
+\begin{itemize}
+    \item Migrated Next.js frontend and Node.js GraphQL gateway from Node 20 to Node 24, upgrading core dependencies, reducing build times by 20\%, and patching legacy CVEs.
+    \item Refactored high-latency Python report-generation microservice utilizing ThreadPool parallelization and batch SQL inserts, reducing processing time from 60+ minutes to under 60 seconds.
+    \item Automated 1M+ record migration to Azure using robust pipelines with zero manual reconciliation, saving 2--3 hours daily.
+    \item Designed Apollo Server GraphQL gateway in Node.js to replace REST endpoints, optimizing payload size and client data retrieval.
+\end{itemize}
+
+% --- EXPERIENCE ---
+\section{Professional Experience}
+\textbf{Software Engineer (Fullstack)} | \textbf{Veltris}, Hyderabad \hfill \textit{Feb 2023 -- Present}
+\begin{itemize}
+    \item Architected responsive Next.js/React frontends and Node.js GraphQL API gateway layers; led migration of web client and API layers from Node 20 to Node 24 for enhanced stability.
+    \item Built and maintained Python report microservices and Node.js GraphQL schemas supporting optical fiber manufacturing and hardware testing workflows.
+    \item Designed and optimized Azure-based CI/CD pipelines, automating deployments and decreasing deployment times from 8 minutes to 1.5 minutes using Docker caching.
+    \item Wrote unit and integration test suites using Jest and PyTest, maintaining 85\%+ test coverage for web clients and microservices.
+\end{itemize}
+
+% --- PROJECTS ---
+\section{Projects}
+\textbf{AFL Global -- Fiber Testing Web Suite} \hfill \textit{Next.js, Node.js, GraphQL, Python Microservices}
+\begin{itemize}
+    \item Managed Next.js frontend, GraphQL gateway, and Python reporting microservice for a web suite interfacing with a .NET hardware testing engine.
+    \item Led the codebase upgrade from Node 20 to Node 24, upgrading Apollo Client/Server, resolving dependency conflicts, and improving compilation performance.
+    \item Optimized a high-latency Python reports microservice using parallel execution and database batch inserts, reducing report generation times by 60x (from 60+ minutes to under 60 seconds).
+    \item Created unified GraphQL schemas and resolvers on Apollo Server, replacing fragmented REST endpoints and minimizing data payload over-fetching by 40\%.
+\end{itemize}
+
+\textbf{Olivet Migration -- Data Platform} \hfill \textit{Node.js, Azure, SQL, Azure DevOps}
+\begin{itemize}
+    \item Built a high-throughput, fault-tolerant migration tool using Node.js to transfer 1M+ records to Azure SQL with automated validation and rollback support.
+\end{itemize}
+
+\textbf{Serverless Finance Manager} \hfill \textit{Flask, React.js, TypeScript, AWS Lambda, CloudFront}
+\begin{itemize}
+    \item Developed a serverless ledger application using AWS Lambda, CloudFront, a React/TypeScript frontend, and a Flask backend with DynamoDB storage.
+\end{itemize}
+
+% --- EDUCATION ---
+\section{Education}
+\textbf{Rajiv Gandhi University of Knowledge Technologies (RGUKT)}, Srikakulam \hfill \textit{2019 -- 2023}
+\begin{itemize}
+    \item Bachelor of Technology in Computer Science \& Engineering | CGPA: 8.7/10
+\end{itemize}
+
+\end{document}

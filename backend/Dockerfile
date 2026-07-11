@@ -3,9 +3,9 @@ FROM ubuntu:24.04
 # Avoid interactive prompts during apt install
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install Node.js and certificates
+# Install Node.js, certificates, and Tectonic shared libraries
 RUN apt-get update && \
-    apt-get install -y curl ca-certificates && \
+    apt-get install -y curl ca-certificates libfontconfig1 libgraphite2-3 libharfbuzz0b libharfbuzz-icu0 libssl3 && \
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs && \
     apt-get clean

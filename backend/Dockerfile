@@ -1,4 +1,14 @@
-FROM node:22-noble
+FROM ubuntu:24.04
+
+# Avoid interactive prompts during apt install
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Node.js and certificates
+RUN apt-get update && \
+    apt-get install -y curl ca-certificates && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean
 
 WORKDIR /app
 

@@ -144,7 +144,8 @@ Guidelines:
 3. Keep the single-page layout optimizations. Do not expand the content so much that it overflows to a second page.
 4. Do NOT modify the candidate's contact details, name, or education details.
 5. WARNING: You MUST properly escape all special LaTeX characters in your generated text (e.g., use \\& instead of &, \\% instead of %, \\$ instead of $). Failure to do so will crash the compiler.
-6. Your response MUST contain ONLY the raw updated LaTeX code. Do NOT wrap it in markdown code blocks (such as \`\`\`latex or \`\`\`). Output exactly the LaTeX code beginning with \\documentclass and ending with \\end{document}.`;
+6. Keep the "AI Tools" section intact. Add to it if required by the JD, but do NOT remove it or its existing contents.
+7. Your response MUST contain ONLY the raw updated LaTeX code. Do NOT wrap it in markdown code blocks (such as \`\`\`latex or \`\`\`). Output exactly the LaTeX code beginning with \\documentclass and ending with \\end{document}.`;
 
     const result = await model.generateContent(prompt);
     let tailoredLatex = result.response.text().trim();

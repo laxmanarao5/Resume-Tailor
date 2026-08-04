@@ -8,6 +8,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { compile } = require('node-latex-compiler');
+const AdmZip = require('adm-zip');
 require('dotenv').config();
 
 const app = express();
@@ -62,17 +63,48 @@ async function compileViaNodeLatex(latexCode) {
   }
 }
 
+// Fetch template from Overleaf
+async function fetchOverleafTemplate() {
+  const readLink = process.env.OVERLEAF_READ_LINK;
+  if (!readLink) return null;
+  
+  try {
+    console.log("Fetching template from Overleaf...");
+    // Extract project ID from the read-only link (e.g., https://www.overleaf.com/read/abcdefghijk)
+    const projectId = readLink.split('/read/')[1]?.split('/')[0];
+    if (!projectId) throw new Error("Invalid Overleaf read link");
+    
+    const zipUrl = `https://www.overleaf.com/project/${projectId}/download/zip`;
+    const response = await axios.get(zipUrl, { responseType: 'arraybuffer' });
+    
+    const zip = new AdmZip(response.data);
+    const zipEntries = zip.getEntries();
+    
+    // Find main.tex
+    const mainEntry = zipEntries.find(entry => entry.entryName === 'main.tex');
+    if (!mainEntry) throw new Error("main.tex not found in Overleaf zip");
+    
+    return mainEntry.getData().toString('utf8');
+  } catch (err) {
+    console.warn("Failed to fetch from Overleaf, falling back to local Resume.tex:", err.message);
+    return null;
+  }
+}
+
 app.post('/api/tailor', async (req, res) => {
   const { jd } = req.body;
   if (!jd || jd.trim() === '') {
     return res.status(400).json({ error: "Job description is required" });
   }
 
-  // 1. Read Resume.tex
-  if (!fs.existsSync(RESUME_PATH)) {
-    return res.status(500).json({ error: "Source Resume.tex not found in workspace root" });
+  // 1. Read Resume template (from Overleaf or local)
+  let originalLatex = await fetchOverleafTemplate();
+  if (!originalLatex) {
+    if (!fs.existsSync(RESUME_PATH)) {
+      return res.status(500).json({ error: "Source Resume.tex not found locally and Overleaf link failed or not set." });
+    }
+    originalLatex = fs.readFileSync(RESUME_PATH, 'utf8');
   }
-  const originalLatex = fs.readFileSync(RESUME_PATH, 'utf8');
 
   // 2. Call Gemini to tailor LaTeX
   const apiKey = process.env.GEMINI_API_KEY;

@@ -117,16 +117,18 @@ app.post('/api/tailor', async (req, res) => {
     const ai = new GoogleGenerativeAI(apiKey);
     
     // Using gemini-3.1-flash-lite as pro does not have free tier quota
-    const model = ai.getGenerativeModel({ 
+    const model = ai.getGenerativeModel({
       model: 'gemini-3.1-flash-lite',
       generationConfig: {
-        responseMimeType: 'text/plain'
+        responseMimeType: 'text/plain',
+        temperature: 0.35,
+        maxOutputTokens: 4096
       }
     });
 
-    const prompt = `You are a professional resume writer and LaTeX formatting expert.
-You will be given the LaTeX code of a resume and a target Job Description (JD).
-Your task is to tailor the resume specifically for this JD to maximize the ATS matching score.
+    const prompt = `You are an expert technical resume writer, ATS (Applicant Tracking System) optimization specialist, and LaTeX formatting expert who has helped hundreds of software engineers get more interview call-backs.
+
+You will be given the candidate's real LaTeX resume and a target Job Description (JD). Your job is to rewrite the resume LaTeX so it scores as high as possible with ATS keyword-matching engines AND reads as a strong, credible fit to a human hiring manager in the first 30 seconds — WITHOUT fabricating anything.
 
 Original Resume LaTeX:
 ------------------------------------------
@@ -138,14 +140,26 @@ Target Job Description:
 ${jd}
 ------------------------------------------
 
-Guidelines:
-1. Tailor the "Career Objective", "Key Skills", and "Professional Experience" bullet points to emphasize relevant technologies, metrics, and achievements mentioned in the JD.
-2. Keep the candidate's actual projects (AFL Global, Olivet Migration, Serverless Finance Manager) and experience at Veltris, but align the descriptions and keywords.
-3. Keep the single-page layout optimizations. Do not expand the content so much that it overflows to a second page.
-4. Do NOT modify the candidate's contact details, name, or education details.
-5. WARNING: You MUST properly escape all special LaTeX characters in your generated text (e.g., use \\& instead of &, \\% instead of %, \\$ instead of $). Failure to do so will crash the compiler.
-6. Keep the "AI Tools" section intact. Add to it if required by the JD, but do NOT remove it or its existing contents.
-7. Your response MUST contain ONLY the raw updated LaTeX code. Do NOT wrap it in markdown code blocks (such as \`\`\`latex or \`\`\`). Output exactly the LaTeX code beginning with \\documentclass and ending with \\end{document}.`;
+STEP 1 — Silently analyze the JD (do not print this analysis, just use it):
+- Identify the exact job title, seniority level, and the 15-20 most important required/preferred skills, tools, frameworks, and keywords.
+- For each keyword, note both the spelled-out form and its acronym if applicable (e.g. "Continuous Integration/Continuous Deployment (CI/CD)"), since ATS engines often do literal string matching and you want to cover both forms.
+- Note the JD's own preferred terminology (e.g. "microservices" vs "service-oriented architecture") so you can mirror its exact wording wherever the candidate genuinely has that skill.
+- Cross-reference against the candidate's original resume to find which of their real skills, tools, and quantified achievements are most relevant to this JD.
+
+STEP 2 — Rewrite the resume applying these rules:
+1. "Career Objective": rewrite as a punchy 2-3 line summary that mirrors the target job title/seniority and naturally weaves in the 4-6 most relevant JD keywords. It must read fluently to a human, never like a keyword dump.
+2. "Key Skills": reorder items within each category so the ones matching the JD's top requirements come first. You may ADD a keyword only if it is already truthfully demonstrated elsewhere in the candidate's original resume (a project, experience bullet, or existing skill) — never invent a technology, certification, or tool the candidate has no real evidence of using.
+3. "Professional Experience" and "Projects" bullets: rewrite the PHRASING (not the underlying facts) to foreground the JD's terminology, lead with strong action verbs, and surface the existing quantified metric (%, time saved, scale, records, latency, cost) in each bullet that already has one. Do NOT invent new numbers, scope, or claims that aren't already implied by the original bullet.
+4. Never change real employer names, project names, job titles, or dates (e.g. Veltris, AFL Global, Olivet Migration, Serverless Finance Manager, AI Resume Tailor, RGUKT, and every date range) — only phrasing, emphasis, and ordering may change, never the underlying facts.
+5. Preserve the single-page layout exactly as designed. If your edits would overflow to a second page, tighten wording rather than deleting information, and never touch the document's margins, font size, or packages.
+6. Do NOT modify the candidate's name, contact/location line, or the Education section.
+7. Keep the "AI & Tooling" skill line intact; you may append one JD-relevant AI/tooling entry to it only if the candidate's resume already shows real experience with it elsewhere, but never remove existing entries.
+8. Avoid generic filler ("hardworking", "team player", "passionate") — every sentence must carry a concrete skill, tool, or metric.
+9. WARNING: You MUST properly escape all special LaTeX characters in any text you write or modify (\\& for &, \\% for %, \\$ for $, \\# for #, \\_ for _). Unescaped characters will crash the compiler.
+
+STEP 3 — Before returning your answer, silently self-check: every keyword you added is truthfully backed by the original resume; no employer/title/date/degree was altered; the LaTeX braces/environments are balanced and it compiles cleanly from \\documentclass to \\end{document}; the content still fits one page.
+
+Your response MUST contain ONLY the raw, complete, updated LaTeX code — no commentary, no explanation, no markdown code fences (no \`\`\`latex or \`\`\`). Output must begin with \\documentclass and end with \\end{document}.`;
 
     const result = await model.generateContent(prompt);
     let tailoredLatex = result.response.text().trim();
@@ -153,6 +167,11 @@ Guidelines:
     // Clean up potential markdown formatting if the model ignored the instructions
     if (tailoredLatex.startsWith("```")) {
       tailoredLatex = tailoredLatex.replace(/^```[a-zA-Z]*\n/, "").replace(/\n```$/, "");
+    }
+
+    // Sanity-check the model's output before wasting a LaTeX compile attempt on garbage
+    if (!tailoredLatex.startsWith("\\documentclass") || !tailoredLatex.includes("\\end{document}")) {
+      return res.status(500).json({ error: "Gemini returned an invalid/incomplete LaTeX document. Please retry." });
     }
 
     const timestamp = Date.now();
